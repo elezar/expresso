@@ -46,7 +46,7 @@ class Ui_Form(QtGui.QWidget):
     signalCompleteTrigger=QtCore.pyqtSignal(object)
     signalRefreshTrigger=QtCore.pyqtSignal(object)
 
-    def __init__(self,parent=None,index=None):	
+    def __init__(self,parent=None,index=None):
         self.index=index
         super(Ui_Form,self).__init__(parent)
         self.setupUi(self)
@@ -102,15 +102,23 @@ class Ui_Form(QtGui.QWidget):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("Form", "Other", None))
         self.label.setText(_translate("Form", "Save net configuration as", None))
         self.pushButton.setText(_translate("Form", "Save", None))
-	self.netHandle=netConfig_pb2.Param()
-        text_format.Merge(open(root+'/net/netData.prototxt').read(),self.netHandle)
-	self.lineEdit.setText("Untitled")
-	self.addTabs()
-	self.onIndexChanged(self.index)
-	self.pushButton.clicked.connect(self.onSubmitClicked)
+        self.netHandle=netConfig_pb2.Param()
 
-	self.page0Widget.toolButton_5.clicked.connect(self.copyFromDeploySlot)
-	self.page1Widget.toolButton_5.clicked.connect(self.copyFromTrainSlot)
+        net_data_file = root+'/net/netData.prototxt'
+        if not os.path.isfile(net_data_file):
+            # TODO: This should be handled properly, but the file above is used all over the code.
+            f = open(net_data_file, 'w')
+            f.close()
+
+        text_format.Merge(open(net_data_file).read(),self.netHandle)
+
+        self.lineEdit.setText("Untitled")
+        self.addTabs()
+        self.onIndexChanged(self.index)
+        self.pushButton.clicked.connect(self.onSubmitClicked)
+
+        self.page0Widget.toolButton_5.clicked.connect(self.copyFromDeploySlot)
+        self.page1Widget.toolButton_5.clicked.connect(self.copyFromTrainSlot)
 
     def addTabs(self):
         self.page0Widget=configViewItem.Ui_Form(parent=self.tab,trainMode=True,index=self.index)
@@ -168,7 +176,7 @@ class Ui_Form(QtGui.QWidget):
     def onSubmitClicked(self):
         self.netHandle=netConfig_pb2.Param();
         self.data=open(root+'/net/netData.prototxt').read()
-        text_format.Merge(self.data,self.netHandle)   
+        text_format.Merge(self.data,self.netHandle)
 
 	print 'Net is now saving its configuration'
 	ch=None
@@ -177,7 +185,7 @@ class Ui_Form(QtGui.QWidget):
 	#ch=self.netHandle.net[index] #Current Handle of the net
 	#Step 1 : Create Folder with all the configurations and save it
 	savefolder=root+'/net/data/'+self.lineEdit.text().__str__().lower()
-	
+
 	if os.path.exists(savefolder):
 	    reply = QtGui.QMessageBox.question(self, 'Message',\
             "Are you sure to override existing?", QtGui.QMessageBox.Yes | \
@@ -202,7 +210,7 @@ class Ui_Form(QtGui.QWidget):
 	    reply = QtGui.QMessageBox.question(self, 'Message',\
             "Are you sure to override existing Train File?", QtGui.QMessageBox.Yes | \
             QtGui.QMessageBox.No, QtGui.QMessageBox.No)
-	    if(reply==QtGui.QMessageBox.Yes): 
+	    if(reply==QtGui.QMessageBox.Yes):
 		open(savefolder+'/'+extension,'w').write(self.page0Widget.subWidget.textEdit.toPlainText().__str__())
 		ch.trainpath=savefolder+'/'+extension
 	else:
@@ -213,15 +221,15 @@ class Ui_Form(QtGui.QWidget):
 	    ch.tdim2=self.page0Widget.subWidget.dim[2]
 	    ch.tdim3=self.page0Widget.subWidget.dim[3]
 
-		
-	   	
+
+
 	#Step 1.2 : Saving Deploy Net
 	extension=self.lineEdit.text().__str__().lower()+'_deploy.prototxt'
 	if os.path.exists(savefolder+'/'+extension):
 	    reply = QtGui.QMessageBox.question(self, 'Message',\
             "Are you sure to override existing Deploy File?", QtGui.QMessageBox.Yes | \
             QtGui.QMessageBox.No, QtGui.QMessageBox.No)
-	    if(reply==QtGui.QMessageBox.Yes): 
+	    if(reply==QtGui.QMessageBox.Yes):
 		open(savefolder+'/'+extension,'w').write(self.page1Widget.subWidget.textEdit.toPlainText().__str__())
 		ch.protopath=savefolder+'/'+extension
 
@@ -238,15 +246,15 @@ class Ui_Form(QtGui.QWidget):
 	        reply = QtGui.QMessageBox.question(self, 'Message',\
                 "Are you sure to override existing Model File?", QtGui.QMessageBox.Yes | \
                 QtGui.QMessageBox.No, QtGui.QMessageBox.No)
-	        if(reply==QtGui.QMessageBox.Yes and modelpath!=savefolder+'/'+extension): 
-		    shutil.copy(modelpath,savefolder+'/'+extension)	
+	        if(reply==QtGui.QMessageBox.Yes and modelpath!=savefolder+'/'+extension):
+		    shutil.copy(modelpath,savefolder+'/'+extension)
 		    ch.modelpath=savefolder+'/'+extension
 
 	    else:
-	        if(modelpath!=savefolder+'/'+extension):shutil.copy(modelpath,savefolder+'/'+extension)	
+	        if(modelpath!=savefolder+'/'+extension):shutil.copy(modelpath,savefolder+'/'+extension)
 		ch.modelpath=savefolder+'/'+extension
-			
-	
+
+
 	else:
 	    QtGui.QMessageBox.critical(self, 'Warning',\
             "Model File is MUST for both training and Deploy.Please include Path")
@@ -256,14 +264,14 @@ class Ui_Form(QtGui.QWidget):
 	ch.has_mean=self.page3Widget.checkBoxHasMean.isChecked() and self.page3Widget.lineEditMeanPath.text().__str__()!=''
 
 	if(self.page3Widget.lineEditMeanPath.text().__str__()!=''): ch.meanpath=self.page3Widget.lineEditMeanPath.text().__str__()
-	
+
 	if(self.page3Widget.lineEditRawScale.text().__str__()!=''):ch.raw_scale=int(self.page3Widget.lineEditRawScale.text().__str__())
 	ch.gpu=self.page3Widget.checkBoxUseGPU.isChecked()
 	ch.gpu_index=int(self.page3Widget.lineEditGPUIndex.text().__str__())
 	ch.channel_swap=self.page3Widget.checkBoxChannelSwap.isChecked()
 	print ch
 
-	#Solver Parameters for saving . . . 
+	#Solver Parameters for saving . . .
 	extension=self.lineEdit.text().__str__().lower()+'_solver.prototxt'
 	with open(savefolder+'/'+extension,'w') as f:
 	    print self.page2Widget.protoHandler
@@ -271,12 +279,12 @@ class Ui_Form(QtGui.QWidget):
             self.page2Widget.protoHandler.net=(savefolder+'/'+self.lineEdit.text().__str__().lower()+'_train.prototxt')
 	    self.page2Widget.protoHandler.snapshot_prefix=savefolder
 	    self.page2Widget.protoHandler.solver_mode=self.page3Widget.checkBoxUseGPU.isChecked()
-	    
+
             f.write(self.page2Widget.protoHandler.__str__())
 	    ch.solverpath=savefolder+'/'+extension
 
 
-	    
+
 
 	#self.lineEdit.text().__str__().lower()+
 	#Other Ends
@@ -287,9 +295,9 @@ class Ui_Form(QtGui.QWidget):
 
 
 
-	
-		
-	
+
+
+
 	#Step 2 : Update Paths in the netData
 	#Step 3 : Refresh The display
 
@@ -300,7 +308,7 @@ class Ui_Form(QtGui.QWidget):
 	    del self.page0Widget.subWidget.protohandler.layers[2]
 	self.page0Widget.subWidget.protohandler.MergeFrom(self.page1Widget.subWidget.protohandler)
 
-	
+
 	#for layer in self.page0Widget.subWidget.protohandler.layers:
 	    #del layer
 		#if layer.type!=	None or layer.type not in [32,5,9,29,24,12]:del layer
@@ -327,9 +335,9 @@ class Ui_Form(QtGui.QWidget):
         text_format.Merge(open(root+'/net/netData.prototxt').read(),self.netHandle)
 
 
-	
 
-	
+
+
 
 if __name__== "__main__":
     import sys
