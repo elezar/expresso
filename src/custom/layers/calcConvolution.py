@@ -11,6 +11,9 @@ import caffe_pb2
 
 
 def operate(bottomDict, layerParameter):
+
+    print layerParameter
+
     layerHandler = caffe_pb2.LayerParameter()
     text_format.Merge(layerParameter, layerHandler)
     conv_param = layerHandler.convolution_param
@@ -24,9 +27,15 @@ def operate(bottomDict, layerParameter):
 
     # The following are specified as "repeated" in caffe.proto
     # TODO: What is the best way to handle the multi-domensionality
-    paramdict["stride"] = conv_param.stride[0]
-    paramdict["pad"] = conv_param.pad[0]
-    paramdict["size"] = conv_param.kernel_size[0]
+    if conv_param.stride:
+        paramdict["stride"] = conv_param.stride[0]
+
+    if conv_param.pad:
+        paramdict["pad"] = conv_param.pad[0]
+
+    if conv_param.kernel_size:
+        paramdict["size"] = conv_param.kernel_size[0]
+
 
     return getDim(bottomDict[bottomDict.keys()[0]]["dim"], **paramdict)
 
