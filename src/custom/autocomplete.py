@@ -17,10 +17,10 @@ class DictionaryCompleter(QtGui.QCompleter):
             for word in f:
                 words.append(word.strip())
             f.close()
-	    self.model=QtGui.QStringListModel(words,parent)
-
         except IOError:
             print "dictionary not in anticipated location"
+
+        self.model=QtGui.QStringListModel(words,parent)
         QtGui.QCompleter.__init__(self, self.model, parent)
 
 class CompletionTextEdit(QtGui.QTextEdit):
@@ -62,7 +62,7 @@ class CompletionTextEdit(QtGui.QTextEdit):
 	self.postProcessing(completion)
 
 
-	
+
 
     def postProcessing(self,completion):
 	insertData=""
@@ -86,7 +86,7 @@ class CompletionTextEdit(QtGui.QTextEdit):
 	#If in layer context
 	if('type:' not in currLine):
 	    #Do Normal Operations
-	    self.correctAppend(completion)	    
+	    self.correctAppend(completion)
         """
 	    self.setTextCursor(tc)
 		    if(elem.message_type==None):
@@ -97,7 +97,7 @@ class CompletionTextEdit(QtGui.QTextEdit):
 			self.moveBack=2
 
         """
-  
+
 
     def correctAppend(self,completion):
 	hList=self.getHierarchyList()
@@ -112,13 +112,13 @@ class CompletionTextEdit(QtGui.QTextEdit):
 	    text_format.Merge(bracketedData,handle)
 	    print 'HList: Message Type : ',handle
 	    if(completion in [elem.name for elem in handle.DESCRIPTOR.fields if elem.message_type is not None]):
-						 
+
 		print 'I am in'
 		self.textCursor().deletePreviousChar()
 		self.textCursor().insertText('{\n\t\n\t}\n')
 	if(len(hList)>1):
 	    print 'Size more than 1'
-	
+
 
 	#For Deciding between ':'or '{}'
     def lastWord(self):
@@ -129,7 +129,7 @@ class CompletionTextEdit(QtGui.QTextEdit):
         tc = self.textCursor()
         tc.select(QtGui.QTextCursor.WordUnderCursor)
         return tc.selectedText()
- 
+
     def focusInEvent(self, event):
         if self.completer:
             self.completer.setWidget(self);
@@ -183,7 +183,7 @@ class CompletionTextEdit(QtGui.QTextEdit):
         cr.setWidth(self.completer.popup().sizeHintForColumn(0)
             + self.completer.popup().verticalScrollBar().sizeHint().width())
         self.completer.complete(cr) ## popup it up!
-	
+
 
     #My Functions
 
@@ -205,12 +205,12 @@ class CompletionTextEdit(QtGui.QTextEdit):
 	bracketedData=self.getBracketedData()
 	hList=self.getHierarchyList()
 	currLine=self.getCurrentLine()
-	#If level=1 
+	#If level=1
 	if(len(hList)==1):
 	    if(':' not in currLine):
 		self.appendData=":"
 		self.moveBack=0
-		return self.getHListData()				
+		return self.getHListData()
 	    print currLine
 	    if("type" in currLine and ":" in currLine):
 		lst=[]
@@ -220,7 +220,7 @@ class CompletionTextEdit(QtGui.QTextEdit):
 		self.appendData=""
 		self.moveBack=0
 		return lst
-	
+
 	if(len(hList)>1):
 	    if(':' not in currLine):
 	    #Hiararchial Data
@@ -234,7 +234,7 @@ class CompletionTextEdit(QtGui.QTextEdit):
     def getCurrentLine(self):
 	return self.toPlainText().__str__()[:self.textCursor().position()].splitlines()[-1]
 
-  
+
 
     def getHierarchyList(self):
 	lst=[]
@@ -243,7 +243,7 @@ class CompletionTextEdit(QtGui.QTextEdit):
 		if '}' in a:lst.pop()
 	print "%%%%%%%%%%%%%%%%", lst
 	return lst
-		
+
     def getBracketedData(self):
 	    data=str(self.toPlainText())
 	    pos=self.textCursor().position()
@@ -252,7 +252,7 @@ class CompletionTextEdit(QtGui.QTextEdit):
 	    for i in range(pos,len(data)):
 		if data[i]=='}':endpos=i
 	    return data[startpos:endpos+1]
-	   
+
 
     def getHListData(self):
 	#For Finding Additional Options
@@ -281,19 +281,19 @@ class CompletionTextEdit(QtGui.QTextEdit):
 
 		for elem in descriptor.fields:
 		    print elem.name,'$$$$$$'
-		    
+
 	    return [elem.name for elem in descriptor.fields ]
 
-						 
-		
+
+
 	if(len(hList)>1):
 	    print 'Size more than 1'
-	
+
 	pass
 
 
 
-   
+
 
 if __name__ == "__main__":
 

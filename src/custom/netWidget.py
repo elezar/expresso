@@ -178,7 +178,7 @@ class MyForm(QtGui.QWidget):
 	if os.path.exists(root+'/net/models/deploy/'+filename.lower()+'.prototxt'):
 	    reply = QtGui.QMessageBox.question(self, 'Message','Do you want to overwrite Existing File?', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
 	    if(reply==QtGui.QMessageBox.No):return False
-	
+
 	f=open(root+'/net/models/deploy/'+filename.lower()+'.prototxt','w')
 	f.write(str(self.textEdit.toPlainText()))
 	return True
@@ -190,7 +190,7 @@ class MyForm(QtGui.QWidget):
         self.data=open(root+'/net/netData.prototxt').read()
         text_format.Merge(self.data,self.netHandler)
        	if(self.trainMode==True):
-	    if(self.index!=None):    
+	    if(self.index!=None):
 	        self.loadpath=self.netHandler.net[index].trainpath
 		self.dim=[self.netHandler.net[index].tdim0,self.netHandler.net[index].tdim1,self.netHandler.net[index].tdim2,self.netHandler.net[index].tdim3];
 	    else:
@@ -198,7 +198,7 @@ class MyForm(QtGui.QWidget):
 		self.dim=[100,3,227,227];
 
 	else:
-	    if(self.index!=None):    
+	    if(self.index!=None):
 	    	self.loadpath=self.netHandler.net[index].protopath
 	    else:
 		self.loadpath=root+'/src/custom/'+'defaultDeploy.prototxt'
@@ -243,12 +243,12 @@ class MyForm(QtGui.QWidget):
         print self.positionval.y(),self.positionval.x()
         print self.cursor().pos().x()
         self.newWidget.setGeometry(self.cursor().pos().x(),self.cursor().pos().y(),554,367)
-	
+
         #self.newWidget.move(self.cursor().pos().x(),self.cursor().pos().y())
         #self.newWidget.move(self.pos().x()+self.positionval.x(),self.pos().y()+self.positionval.y())
         self.newWidget.installEventFilter(self)
         self.newWidget.show()
-	
+
 
     def deleteLayer(self):
 	del self.protohandler.layer[self.treeWidget.currentIndex().row()-1]
@@ -263,19 +263,19 @@ class MyForm(QtGui.QWidget):
 	#self.newWidget.setGeometry(QtCore.QRect(0,0,510,438))
 	#self.newWidget.setStyleSheet("background-color:rgb(90,120,90)")
 	#self.innerWidget=conv.Ui_Form(self.newWidget)
-	
- 	
+
+
 
 
 	#===== END OF INTERFACING ==
         self.newWidget=layerView.Ui_Form()
         self.newWidget.textEdit.setText('layer{\n'+self.loadCurrentData()+'\n}')
-	self.newWidget.setStyleSheet("background-color:rgb(115,115,115);")
+        self.newWidget.setStyleSheet("background-color:rgb(115,115,115);")
         globalpnt=self.newWidget.mapToGlobal(self.positionval)
         print self.positionval.y(),self.positionval.x()
         print self.cursor().pos().x()
         self.newWidget.setGeometry(self.cursor().pos().x(),self.cursor().pos().y(),554,367)
-	
+
         #self.newWidget.move(self.cursor().pos().x(),self.cursor().pos().y())
         #self.newWidget.move(self.pos().x()+self.positionval.x(),self.pos().y()+self.positionval.y())
         self.newWidget.installEventFilter(self)
@@ -322,7 +322,7 @@ class MyForm(QtGui.QWidget):
 	    self.layerDict["data"]={"dim":self.dim,"top":["data"],"bottom":[]}
             l.append(layername)
 	    self.layerItemList=l
-     
+
 	idx=1
         #First Layer Ends
         #text_format.Merge(str(self.textEdit.toPlainText()),self.protohandler)
@@ -374,7 +374,7 @@ class MyForm(QtGui.QWidget):
             layername.setBackground(3,QtGui.QBrush(QtGui.QColor(bgarray[0],bgarray[1],bgarray[2])))
             layername.setBackground(4,QtGui.QBrush(QtGui.QColor(bgarray[0],bgarray[1],bgarray[2])))
             layername.setBackground(5,QtGui.QBrush(QtGui.QColor(bgarray[0],bgarray[1],bgarray[2])))
-	    
+
 	    layername.setText(1,layer.type)
 	    layername.setText(2,str(outputDim[0]))
 	    layername.setText(3,str(outputDim[1]))
@@ -479,7 +479,7 @@ class MyForm(QtGui.QWidget):
             layername.setBackground(1,QtGui.QBrush(QtGui.QColor(45,60,45))) #Text is Red
 
             layername.addChildren
-	   
+
             #Adding Dynamic Params
             if(layer.type==4):        #CONV
                 layername.setText(1,'CONV')
@@ -571,7 +571,7 @@ class MyForm(QtGui.QWidget):
 
 	    #for elem in topDict.keys():
 	    #	self.layerDict[elem]=topDict[elem]
-	    	
+
 	else:
 	    if(len(bottomList)>=1):
 		layerdim=self.layerDict[bottomList[0]]['dim'];
@@ -579,7 +579,7 @@ class MyForm(QtGui.QWidget):
 	    else:
 		layerdim=[100,10,227,227]
 	    #self.layerDict[elem]={"dim":bottomDict[bottomList[0]]["dim"],"top":[layername],"bottom":[bottomList[0]]}
-        
+
 	if layername=="pool2/3x3_s2":print '%%%%%%%%%%%%',layerdim
 	return [layerdim,bgarray];
 
@@ -593,7 +593,7 @@ class MyForm(QtGui.QWidget):
 
     #Jaley 27 Mar 2015 End
 
-    
+
 
     def paramiter(self,handle,layername,l):
 
@@ -657,8 +657,8 @@ class MyForm(QtGui.QWidget):
 	    int(str(self.treeWidget.currentItem().text(4))),\
 	    int(str(self.treeWidget.currentItem().text(5)))]
 	    self.textEdit.setText(self.protohandler.__str__())
-   
- 
+
+
 	    self.loadTreeWidget()
 
 if __name__== "__main__":

@@ -32,7 +32,8 @@ except AttributeError:
 class Ui_Form(QtGui.QWidget):
     def __init__(self,parent=None):
         super(Ui_Form, self).__init__(parent)
-	self.setupUi(self)
+        self.setupUi(self)
+
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(554, 367)
@@ -41,10 +42,10 @@ class Ui_Form(QtGui.QWidget):
         self.widget.setGeometry(QtCore.QRect(245, 20, 301, 291))
         self.widget.setStyleSheet(_fromUtf8("background-color:rgb(255,255,255)"))
         self.widget.setObjectName(_fromUtf8("widget"))
-	completer=ac.DictionaryCompleter()
-	self.textEdit=ac.CompletionTextEdit(self.widget)
-	self.textEdit.setCompleter(completer)
-	self.textEdit.setGeometry(QtCore.QRect(0, 0, 301, 291))
+        completer=ac.DictionaryCompleter()
+        self.textEdit=ac.CompletionTextEdit(self.widget)
+        self.textEdit.setCompleter(completer)
+        self.textEdit.setGeometry(QtCore.QRect(0, 0, 301, 291))
         self.listWidget = QtGui.QListWidget(Form)
         self.listWidget.setGeometry(QtCore.QRect(9, 20, 225, 291))
         self.listWidget.setStyleSheet(_fromUtf8("background-color:rgb(116, 175, 211); \n"
@@ -82,7 +83,7 @@ class Ui_Form(QtGui.QWidget):
 	self.pushButtonCancel.setText('Cancel')
 	self.pushButtonOk.clicked.connect(self.submit)
 	self.pushButtonCancel.clicked.connect(self.reject)
-	
+
 
     def submit(self):
 	self.isSubmitted=True
