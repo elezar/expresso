@@ -35,6 +35,7 @@ RUN sh install.sh
 ENV HOME /home/developer
 
 # TODO: This is a bit of a hack to get caffe available to the user "developer"
+RUN chmod o+r -R /root/caffe
 RUN rsync -avz /root/caffe $HOME
 
 ENV CAFFE_ROOT=$HOME/caffe
