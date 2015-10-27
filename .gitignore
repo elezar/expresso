@@ -5,5 +5,10 @@
 *.tar.gz
 *.pickle
 
+temp.png
 
+/net/train/*
+/net/temp/*
+/net/data/*
+/tutorials/data/*
 /tutorials/data/cifar-10-batches-py/*
